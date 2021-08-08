@@ -5,10 +5,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class GenericStack<T extends Number> {
     private T[] container;
-    int top;
-    Lock lock;
-    Condition isEmpty;
-    Condition isFull;
+    private int top;
+    private Lock lock;
+    private Condition isEmpty;
+    private Condition isFull;
 
     public GenericStack(int capacity) {
         container = (T[]) new Number[capacity];
@@ -20,11 +20,11 @@ public class GenericStack<T extends Number> {
 
     public T pop() {
         lock.lock();
-        System.out.println(Thread.currentThread() + " trying to pop...");
+        System.out.printf("%s trying to pop...%n", Thread.currentThread().getName());
         T poppedValue = null;
         try {
             while (isStackEmpty()) {
-                System.out.println(Thread.currentThread() + " Stack is empty, will wait...");
+                System.out.printf("Stack is empty, %s will wait...%n", Thread.currentThread().getName());
                 isEmpty.await();
             }
             poppedValue = container[top];
@@ -41,10 +41,10 @@ public class GenericStack<T extends Number> {
 
     public void push(T value) {
         lock.lock();
-        System.out.println(Thread.currentThread() + " trying to push...");
+        System.out.printf("%s trying to push...%n", Thread.currentThread().getName());
         try {
             while (isStackFull()) {
-                System.out.println(Thread.currentThread() + " Stack is full, will wait...");
+                System.out.printf("Stack is full, %s will wait...%n", Thread.currentThread().getName());
                 isFull.await();
             }
             container[++top] = value;
@@ -66,7 +66,7 @@ public class GenericStack<T extends Number> {
 }
 
 class Pusher implements Runnable {
-    GenericStack<Integer> stack;
+    private GenericStack<Integer> stack;
 
     public Pusher(GenericStack<Integer> stack) {
         this.stack = stack;
@@ -75,7 +75,7 @@ class Pusher implements Runnable {
     @Override
     public void run() {
         for (int i=1; i <= 100; ++i) {
-            System.out.println("Pushing - " + i);
+            System.out.printf("Pushing - %d%n", i);
             stack.push(i);
             try {
                 TimeUnit.MILLISECONDS.sleep(10);
@@ -87,7 +87,7 @@ class Pusher implements Runnable {
 }
 
 class Popper implements Runnable {
-    GenericStack<Integer> stack;
+    private GenericStack<Integer> stack;
 
     public Popper(GenericStack<Integer> stack) {
         this.stack = stack;
@@ -96,7 +96,7 @@ class Popper implements Runnable {
     @Override
     public void run() {
         for (int i=1; i <= 100; ++i) {
-            System.out.println("Popped value - " + stack.pop());
+            System.out.printf("Popped value - %d%n", stack.pop());
             try {
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (InterruptedException e) {
