@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit;
+
 public class DeadlockDemo {
     public static void main(String[] args) {
         Object lock1 = new Object();
@@ -24,10 +26,9 @@ class Task1 implements Runnable {
             System.out.println("Acquired Resource 1");
             System.out.println("Now acquiring Resource 2");
             try {
-                Thread.sleep(3000);
+                TimeUnit.SECONDS.sleep(5);
                 synchronized (lock2) {
                     System.out.println("Acquired Resource 2");
-                    Thread.sleep(3000);
                     System.out.println("Task 1 completed");
                 }
             } catch (InterruptedException e) {
@@ -54,10 +55,9 @@ class Task2 implements Runnable {
             System.out.println("Acquired Resource 2");
             System.out.println("Now acquiring Resource 1");
             try {
-                Thread.sleep(3000);
+                TimeUnit.SECONDS.sleep(5);
                 synchronized (lock1) {
                     System.out.println("Acquired Resource 1");
-                    Thread.sleep(3000);
                     System.out.println("Task 2 completed");
                 }
             } catch (InterruptedException e) {
