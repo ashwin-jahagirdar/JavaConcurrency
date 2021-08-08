@@ -10,7 +10,7 @@ public class ExecutorAndCallable {
         Random random = new Random();
         for (int i=0; i < 10; ++i) {
             Integer number = random.nextInt(15);
-            System.out.println("Calculating factorial for : " + number);
+            System.out.printf("Calculating factorial for : %d%n", number);
             Future<Long> factorial = executorService.submit(() -> {
                 long result = 1L;
                 for (int j = 2; j <= number; ++j) {
@@ -29,9 +29,9 @@ public class ExecutorAndCallable {
         }
         System.out.println("Now processing results of submitted tasks");
         for (Future<Long> result : results) {
-            System.out.println("Processing complete : " + result.isDone());
+            System.out.printf("Processing complete : %b%n", result.isDone());
             try {
-                System.out.println("Result : " + result.get(100, TimeUnit.MILLISECONDS));
+                System.out.printf("Result : %d%n", result.get(100, TimeUnit.MILLISECONDS));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
