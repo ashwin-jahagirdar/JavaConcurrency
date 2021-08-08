@@ -13,7 +13,7 @@ public class PCWithBlockingQ {
 }
 
 class Producer implements Runnable {
-    BlockingQueue<String> container;
+    private BlockingQueue<String> container;
 
     Producer(BlockingQueue container) {
         this.container = container;
@@ -24,7 +24,7 @@ class Producer implements Runnable {
         for (int i=1; i <= 100; ++i) {
             try {
                 boolean isMsgSent = container.offer("Test Message - " + i, 1000, TimeUnit.MILLISECONDS);
-                System.out.println("Message sent ? " + isMsgSent);
+                System.out.printf("Was Message sent - %b%n", isMsgSent);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -33,7 +33,7 @@ class Producer implements Runnable {
 }
 
 class Consumer implements Runnable {
-    BlockingQueue<String> container;
+    private BlockingQueue<String> container;
 
     Consumer(BlockingQueue container) {
         this.container = container;
@@ -48,7 +48,7 @@ class Consumer implements Runnable {
                 if (msg == null) {
                     System.out.println("No message arrived...");
                 } else {
-                    System.out.println("Message : " + msg);
+                    System.out.printf("Message : %s%n", msg);
                 }
                 TimeUnit.MILLISECONDS.sleep(3000);
             } catch (InterruptedException e) {
